@@ -9,7 +9,7 @@ import TheContact from "./components/info/TheContact.vue";
 import StoredAnimals from "./components/my-animals/StoredAnimals.vue";
 import AnimalDetails from "./components/my-animals/AnimalDetails.vue";
 import TheHome from "./components/info/TheHome.vue";
-import TheNotFound from "./components/layouts/TheNotFound.vue"
+import TheNotFound from "./components/layouts/TheNotFound.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -23,7 +23,7 @@ const router = createRouter({
     { path: "/dog/:animalId", component: AnimalDetails },
     { path: "/cat", component: StoredAnimals },
     { path: "/cat/:animalId", component: AnimalDetails },
-    { path: "/:notFound(.*)", component:TheNotFound },
+    { path: "/:notFound(.*)", component: TheNotFound },
   ],
   scrollBehavior(to, from, savedPosition) {
     console.log(to, from, savedPosition);
@@ -33,6 +33,7 @@ const router = createRouter({
     return { left: 0, top: 0 };
   },
 });
+
 
 const app = createApp(App);
 
