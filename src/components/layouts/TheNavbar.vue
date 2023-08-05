@@ -79,7 +79,7 @@ a {
   display: none;
   border-radius: 8px;
   top: 35px;
-  z-index: 1;
+  z-index: 999;
 }
 
 .dropdown li + li {
