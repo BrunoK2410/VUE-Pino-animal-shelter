@@ -10,6 +10,9 @@ import StoredAnimals from "./components/my-animals/StoredAnimals.vue";
 import AnimalDetails from "./components/my-animals/AnimalDetails.vue";
 import TheHome from "./components/info/TheHome.vue";
 import TheNotFound from "./components/layouts/TheNotFound.vue";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -34,6 +37,7 @@ const router = createRouter({
   },
 });
 
+library.add(faArrowUp);
 
 const app = createApp(App);
 
@@ -41,5 +45,5 @@ app.use(router);
 
 app.component("base-button", BaseButton);
 app.component("base-text-card", BaseTextCard);
-
+app.component("font-awesome-icon", FontAwesomeIcon);
 app.mount("#app");
