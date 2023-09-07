@@ -10,10 +10,10 @@
 
 <script>
 export default {
-  props: ["id", "image", "title", "text"],
+  props: ["image", "title", "text"],
   computed: {
     readMoreLink() {
-      return "/home" + "/" + this.id;
+      return "/home" + "/" + this.title.split(" ").join("-").toLowerCase();
     },
   },
 };
