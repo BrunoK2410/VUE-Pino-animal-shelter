@@ -1,7 +1,11 @@
 <template>
   <the-header></the-header>
   <the-navbar></the-navbar>
-  <router-view></router-view>
+  <router-view v-slot="slotProps">
+    <transition name="route" mode="out-in" >
+      <component :is="slotProps.Component"></component>
+    </transition>
+  </router-view>
   <the-footer></the-footer>
 </template>
 
@@ -9,57 +13,7 @@
 import TheHeader from "./components/layouts/TheHeader.vue";
 import TheNavbar from "./components/layouts/TheNavbar.vue";
 import TheFooter from "./components/layouts/TheFooter.vue";
-import axios from "axios";
 export default {
-  data() {
-    return {
-      animals: [],
-      news: [],
-    };
-  },
-  mounted() {
-    this.getAnimals();
-    this.getNews();
-  },
-
-  methods: {
-    getAnimals() {
-      axios
-        .get(
-          "https://vue-animal-shelter-7c71c-default-rtdb.europe-west1.firebasedatabase.app/animals.json"
-        )
-        .then((response) => {
-          console.log(response);
-          this.formatAnimals(response.data);
-        });
-    },
-    formatAnimals(anim) {
-      for (let key in anim) {
-        this.animals.push({ ...anim[key], id: key });
-      }
-    },
-    getNews() {
-      axios
-        .get(
-          "https://vue-animal-shelter-7c71c-default-rtdb.europe-west1.firebasedatabase.app/news.json"
-        )
-        .then((response) => {
-          console.log(response);
-          this.formatNews(response.data);
-        });
-    },
-    formatNews(article) {
-      for (let key in article) {
-        this.news.push({ ...article[key], id: key });
-      }
-    },
-  },
-  provide() {
-    return {
-      animals: this.animals,
-      news: this.news,
-    };
-  },
   components: {
     TheHeader,
     TheNavbar,
@@ -92,5 +46,25 @@ a {
 
 li {
   list-style: none;
+}
+
+.route-enter-from {
+  opacity: 0;
+  transform: translateY(30px);
+}
+.route-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+.route-enter-active {
+  transition: all 1s ease-out;
+}
+.route-leave-active {
+  transition: all 0.3s ease-in;
+}
+.route-enter-to,
+.route-leave-from {
+  opacity: 1;
+  transform: translateY(0);
 }
 </style>

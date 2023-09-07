@@ -19,10 +19,10 @@ export default {
   components: {
     BaseAnimalCard,
   },
-  props:["id","type","image","name","breed"],
+  props: ["id", "type", "image", "name", "breed"],
   computed: {
     readMoreLink() {
-      return "/" + this.type + "/" + this.id;
+      return "/" + this.type + "/" + this.name.toLowerCase();
     },
   },
 };

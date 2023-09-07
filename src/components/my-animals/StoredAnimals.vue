@@ -1,18 +1,25 @@
 <template>
   <div>
-    <the-animal
-      v-for="pet in pets"
-      :key="pet.id"
-      :id="pet.identificator"
-      :type="pet.type"
-      :image="pet.gallery[0]"
-      :name="pet.name"
-      :breed="pet.breed"
-    ></the-animal>
+    <div v-if="isLoading">
+      <base-spinner></base-spinner>
+    </div>
+    <div class="animal-wrapper" v-else-if="hasAnimals">
+      <transition-group name="animals">
+        <the-animal
+          v-for="animal in animals"
+          :key="animal.id"
+          :type="animal.type"
+          :image="animal.gallery[0]"
+          :name="animal.name"
+          :breed="animal.breed"
+        ></the-animal>
+      </transition-group>
+    </div>
+    <h3 v-else>No {{ filterText }} for adoption currently.</h3>
+    <button :class="{ show: isShown }" @click="backToTop">
+      <font-awesome-icon icon="fa-solid fa-arrow-up" size="xl" beat />
+    </button>
   </div>
-  <button :class="{ show: isShown }" @click="backToTop">
-    <font-awesome-icon icon="fa-solid fa-arrow-up" size="xl" beat />
-  </button>
 </template>
 
 <script>
@@ -21,21 +28,32 @@ export default {
   data() {
     return {
       isShown: false,
+      isLoading: false,
+      error: null,
     };
   },
   computed: {
-    pets() {
+    animals() {
       if (this.$route.path === "/dog") {
-        return this.animals.filter((animal) => animal.type === "dog");
+        return this.$store.getters["animals/dogs"];
       } else {
-        return this.animals.filter((animal) => animal.type === "cat");
+        return this.$store.getters["animals/cats"];
+      }
+    },
+    hasAnimals() {
+      return !this.isLoading && this.$store.getters["animals/hasAnimals"];
+    },
+    filterText() {
+      if (this.$route.path === "/dog") {
+        return "dogs";
+      } else {
+        return "cats";
       }
     },
   },
   components: {
     TheAnimal,
   },
-  inject: ["animals"],
   methods: {
     handleScroll() {
       if (
@@ -50,18 +68,28 @@ export default {
     backToTop() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     },
+    async loadAnimals() {
+      this.isLoading = true;
+      try {
+        await this.$store.dispatch("animals/loadAnimals");
+      } catch (error) {
+        this.error = error.message || "Something failed";
+      }
+      this.isLoading = false;
+    },
   },
-  mounted() {
+  created() {
+    this.loadAnimals();
     window.addEventListener("scroll", this.handleScroll);
   },
 };
 </script>
 
 <style scoped>
-div {
+.animal-wrapper {
   display: flex;
   flex-wrap: wrap;
-  margin: 20px;
+  margin: 10px;
 }
 
 button {
@@ -89,5 +117,18 @@ button:hover {
   div {
     margin: 0px;
   }
+}
+
+.animals-enter-from {
+  transform: translateY(-30px);
+}
+.animals-leave-to {
+  opacity:0;
+  transform: translateY(30px);
+}
+.animals-enter-active,
+.animals-leave-active .animals-move {
+  opacity: 0;
+  transition: all 0.5s ease-out;
 }
 </style>

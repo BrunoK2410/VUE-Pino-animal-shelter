@@ -7,15 +7,18 @@
 </template>
 <script>
 export default {
-  inject: ["news"],
   computed: {
     article() {
-      const articleId = this.$route.params.articleId;
-      const selectedArticle = this.news.find(
-        (article) => article.identificator === articleId
+      const articleId = this.$route.params.articleId.split("-").join(" ");
+      console.log(articleId);
+      const selectedArticle = this.$store.getters["news/news"].find(
+        (art) => art.title.toLowerCase() === articleId
       );
       return selectedArticle;
     },
+  },
+  created() {
+    this.$store.dispatch("news/loadNews");
   },
 };
 </script>

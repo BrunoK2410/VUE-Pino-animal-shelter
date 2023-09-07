@@ -7,12 +7,12 @@
     </div>
     <div class="information">
       <ul>
-        <li>Name: {{ pet?.name }}</li>
-        <li>Birthday: {{ pet?.birthday }}</li>
-        <li>Sex: {{ pet?.sex }}</li>
-        <li>Breed: {{ pet?.breed }}</li>
-        <li>Microchip: {{ pet?.microchip }}</li>
-        <li>Treatment: {{ pet?.treatment }}</li>
+        <li>Name: {{ animal?.name }}</li>
+        <li>Birthday: {{ animal?.birthday }}</li>
+        <li>Sex: {{ animal?.sex }}</li>
+        <li>Breed: {{ animal?.breed }}</li>
+        <li>Microchip: {{ animal?.microchip }}</li>
+        <li>Treatment: {{ animal?.treatment }}</li>
       </ul>
     </div>
   </div>
@@ -20,36 +20,40 @@
 
 <script>
 export default {
-  inject: ["animals"],
-
   data() {
     return {
       currentIndex: 0,
       images: [],
+      back: true,
     };
   },
 
   methods: {
     next() {
+      this.back = false;
       this.currentIndex += 1;
     },
     prev() {
+      this.back = true;
       this.currentIndex -= 1;
     },
   },
   computed: {
     currentImage() {
-      return this.pet?.gallery[
-        Math.abs(this.currentIndex) % this.pet?.gallery.length
+      return this.animal?.gallery[
+        Math.abs(this.currentIndex) % this.animal?.gallery.length
       ];
     },
-    pet() {
+    animal() {
       const animalId = this.$route.params.animalId;
-      const selectedAnimal = this.animals.find(
-        (animal) => animal.identificator === animalId
+      const selectedAnimal = this.$store.getters["animals/animals"].find(
+        (animal) => animal.name.toLowerCase() === animalId
       );
       return selectedAnimal;
     },
+  },
+  created() {
+    this.$store.dispatch("animals/loadAnimals");
   },
 };
 </script>
